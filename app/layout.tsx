@@ -15,8 +15,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Realistic News',
-  description: 'Breaking news and in-depth journalism',
+  title: 'Reference Newspaper - Nigerian News Today',
+  description: 'Breaking news, politics, business, sports and entertainment from Nigeria. Get the latest news and in-depth analysis.',
   generator: 'v0.app',
   icons: {
     icon: [

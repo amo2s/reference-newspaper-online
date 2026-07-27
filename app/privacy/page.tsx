@@ -1,4 +1,4 @@
-import { Header } from '@/components/header'
+import { GlobalHeader } from '@/components/header'
 import { Footer } from '@/components/footer'
 
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 export default function Privacy() {
   return (
     <>
-      <Header />
+      <GlobalHeader />
       <main className="min-h-screen bg-background">
         <div className="max-w-4xl mx-auto px-4 py-16">
           {/* Page Header */}
