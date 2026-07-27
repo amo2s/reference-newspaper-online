@@ -1,10 +1,22 @@
 import { Analytics } from '@vercel/analytics/next'
+import { Merriweather, Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
+const merriweather = Merriweather({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-serif',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
+
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Realistic News',
+  description: 'Breaking news and in-depth journalism',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -39,8 +51,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" className={`${merriweather.variable} ${inter.variable} bg-background`}>
+      <body className="antialiased font-sans">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

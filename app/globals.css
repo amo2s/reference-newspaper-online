@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-serif: 'Merriweather', 'Merriweather Fallback';
+  --color-crimson: #b91c1c;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -159,5 +161,45 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold;
+  }
+}
+
+@layer components {
+  .badge-breaking {
+    @apply inline-flex items-center px-3 py-1 bg-crimson text-white text-xs font-bold rounded-full uppercase tracking-wide;
+  }
+  
+  .badge-live {
+    @apply inline-flex items-center px-3 py-1 bg-crimson text-white text-xs font-bold rounded-full uppercase tracking-wide;
+  }
+  
+  .marquee-container {
+    overflow: hidden;
+    background-color: var(--background);
+  }
+  
+  .marquee {
+    display: flex;
+    animation: marquee 30s linear infinite;
+  }
+  
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .article-hover {
+    @apply transition-transform duration-300 ease-out group-hover:scale-105;
+  }
+  
+  .headline-hover {
+    @apply transition-colors duration-200 group-hover:text-crimson;
   }
 }
