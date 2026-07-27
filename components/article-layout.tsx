@@ -3,13 +3,22 @@
 import { Article } from '@/lib/mock-data'
 
 export function ArticleLayout({ article }: { article: Article }) {
+  // Get related articles from same category
+  const { mockArticles } = require('@/lib/mock-data')
+  const relatedArticles = mockArticles
+    .filter((a: Article) => a.category === article.category && a.id !== article.id)
+    .slice(0, 2)
+
   return (
     <article className="py-8">
       {/* Hero Image */}
       <div className="w-full aspect-video bg-muted rounded-lg mb-8 overflow-hidden">
-        <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-          <span className="text-gray-500">Featured Image</span>
-        </div>
+        <img
+          src={article.image}
+          alt={article.title}
+          className="w-full h-full object-cover"
+          loading="eager"
+        />
       </div>
 
       {/* Main Content Area */}
@@ -124,23 +133,32 @@ export function ArticleLayout({ article }: { article: Article }) {
           {/* Related Articles */}
           <div className="border-t border-border pt-12">
             <h2 className="font-serif text-3xl font-bold mb-6">Related Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
-                <div key={i} className="border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-muted flex items-center justify-center">
-                    <span className="text-gray-500">Related</span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-serif font-bold line-clamp-2 mb-2 hover:text-crimson transition-colors cursor-pointer">
-                      Related Article {i}
-                    </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      Continue reading about related topics
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {relatedArticles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {relatedArticles.map((related: Article) => (
+                  <a key={related.id} href={`/article/${related.id}`} className="group border border-border rounded-lg overflow-hidden hover:shadow-lg hover:border-crimson transition-all">
+                    <div className="aspect-video bg-muted overflow-hidden">
+                      <img
+                        src={related.image}
+                        alt={related.title}
+                        className="w-full h-full object-cover group-hover:brightness-90 transition-all"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-serif font-bold line-clamp-2 mb-2 text-foreground group-hover:text-crimson transition-colors">
+                        {related.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {related.excerpt}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground">No related articles found.</p>
+            )}
           </div>
         </div>
       </div>

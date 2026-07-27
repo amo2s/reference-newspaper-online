@@ -1,4 +1,5 @@
 import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import { ArticleLayout } from '@/components/article-layout'
 import { mockArticles } from '@/lib/mock-data'
 
@@ -32,6 +33,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           <ArticleLayout article={article} />
         </div>
       </main>
+      <Footer />
     </>
   )
 }

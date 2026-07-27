@@ -2,18 +2,23 @@
 
 import { useState } from 'react'
 import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import { ArticleCard } from '@/components/article-card'
 import { mockArticles } from '@/lib/mock-data'
 
-const CATEGORIES = ['politics', 'technology', 'business', 'science']
+const CATEGORIES = ['Politics', 'Business', 'Sports', 'Entertainment']
 
 export default function CategoryPage({ params }: { params: { slug: string } }) {
   const [selectedSort, setSelectedSort] = useState('latest')
-  const category = params.slug.toLowerCase()
+  
+  // Normalize category name
+  const categoryName = params.slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
 
-  const categoryName = category.charAt(0).toUpperCase() + category.slice(1)
   const filteredArticles = mockArticles.filter(
-    a => a.category.toLowerCase() === category
+    a => a.category.toLowerCase() === categoryName.toLowerCase()
   )
 
   const sortedArticles = [...filteredArticles].sort((a, b) => {
@@ -21,6 +26,8 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
       return new Date(b.date).getTime() - new Date(a.date).getTime()
     } else if (selectedSort === 'oldest') {
       return new Date(a.date).getTime() - new Date(b.date).getTime()
+    } else if (selectedSort === 'popular') {
+      return b.readTime - a.readTime
     }
     return 0
   })
@@ -32,35 +39,37 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Category Header */}
           <div className="mb-12">
-            <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="font-serif text-5xl md:text-6xl font-bold mb-4 text-foreground">
               {categoryName}
             </h1>
             <p className="text-lg text-muted-foreground">
-              {filteredArticles.length} stories in {categoryName}
+              {filteredArticles.length} {filteredArticles.length === 1 ? 'story' : 'stories'} in {categoryName}
             </p>
           </div>
 
           {/* Filter Bar */}
-          <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b border-border">
-            <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
-            {['latest', 'oldest', 'trending'].map((sort) => (
+          <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b-2 border-border">
+            <span className="text-sm font-semibold text-foreground">Sort by:</span>
+            {['latest', 'oldest', 'popular'].map((sort) => (
               <button
                 key={sort}
                 onClick={() => setSelectedSort(sort)}
-                className={`px-4 py-2 rounded text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   selectedSort === sort
-                    ? 'bg-foreground text-background'
-                    : 'border border-border hover:border-foreground'
+                    ? 'bg-crimson text-white'
+                    : 'border border-border text-foreground hover:border-crimson'
                 }`}
               >
-                {sort.charAt(0).toUpperCase() + sort.slice(1)}
+                {sort === 'latest' && 'Latest'}
+                {sort === 'oldest' && 'Oldest'}
+                {sort === 'popular' && 'Popular'}
               </button>
             ))}
           </div>
 
-          {/* Articles Grid */}
+          {/* Articles Masonry Grid */}
           {sortedArticles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {sortedArticles.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
@@ -74,17 +83,17 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           )}
 
           {/* Other Categories */}
-          <div className="mt-16 pt-12 border-t border-border">
-            <h2 className="font-serif text-2xl font-bold mb-6">Other Categories</h2>
+          <div className="pt-12 border-t-2 border-border">
+            <h2 className="font-serif text-3xl font-bold mb-8 text-foreground">Explore Other Categories</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {CATEGORIES.filter(cat => cat !== category).map((cat) => (
+              {CATEGORIES.filter(cat => cat !== categoryName).map((cat) => (
                 <a
                   key={cat}
-                  href={`/category/${cat}`}
-                  className="group p-6 border border-border rounded-lg hover:border-crimson hover:bg-gray-50 transition-all text-center"
+                  href={`/category/${cat.toLowerCase()}`}
+                  className="group p-6 bg-white border border-border rounded-lg hover:shadow-lg hover:border-crimson transition-all text-center"
                 >
-                  <h3 className="font-serif font-bold text-lg group-hover:text-crimson transition-colors">
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-crimson transition-colors">
+                    {cat}
                   </h3>
                 </a>
               ))}
@@ -92,6 +101,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }
